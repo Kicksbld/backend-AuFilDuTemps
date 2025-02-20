@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const cors = require("cors");
+console.log('DATABASE_URL', process.env.DATABASE_URL)
 
 const prisma = new PrismaClient();
 const app = express();
