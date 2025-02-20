@@ -1,31 +1,20 @@
 require('dotenv').config();
-const express = require("express");
-const { PrismaClient } = require("@prisma/client");
-const cors = require("cors");
-console.log('DATABASE_URL', process.env.DATABASE_URL)
+const express = require('express');
+const cors = require('cors');
+const usersRouter = require('./users'); 
 
-const prisma = new PrismaClient();
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-app.use(express.json());
-app.use(cors());
+app.use(express.json()); 
+app.use(cors()); 
 
-app.get("/", (req, res) => res.send("Express on Vercel"));
+app.use('/users', usersRouter); 
 
-app.get("/users", async (req, res) => {
-  try {
-    const users = await prisma.user.findMany();
-    console.log("Users:", users);
-    res.json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
+app.get("/", (req, res) => res.send("Express API running with Prisma on Vercel"));
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-module.exports = app;
+module.exports = app; 
