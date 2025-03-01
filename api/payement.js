@@ -3,8 +3,6 @@ const express = require('express');
 const stripe = require('stripe')(process.env.STRIPE_API_KEY); 
 const router = express.Router();
 
-const YOUR_DOMAIN = process.env.FRONTEND_URL; 
-
 router.post('/', async (req, res) => {
   try {
     const { priceId } = req.body; 
