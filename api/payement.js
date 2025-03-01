@@ -21,8 +21,8 @@ router.post('/', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: `${YOUR_DOMAIN}/order-review`, 
-      cancel_url: `${YOUR_DOMAIN}/cancel`, 
+      success_url: `${req.headers.origin}/order-review`, 
+      cancel_url: `${req.headers.origin}/cancel`, 
     });
 
     res.status(200).json({ url: session.url });
