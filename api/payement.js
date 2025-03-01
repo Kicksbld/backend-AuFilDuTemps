@@ -3,7 +3,7 @@ const express = require('express');
 const stripe = require('stripe')(process.env.STRIPE_API_KEY); 
 const router = express.Router();
 
-const YOUR_DOMAIN = 'http://localhost:4242'; 
+const YOUR_DOMAIN = process.env.FRONTEND_URL; 
 
 router.post('/', async (req, res) => {
   try {
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: `${YOUR_DOMAIN}/success`, 
+      success_url: `${YOUR_DOMAIN}/order-review`, 
       cancel_url: `${YOUR_DOMAIN}/cancel`, 
     });
 
