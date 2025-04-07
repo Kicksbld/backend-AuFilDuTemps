@@ -1,7 +1,9 @@
 // payment.js
-const express = require('express');
-const stripe = require('stripe')(process.env.STRIPE_API_KEY); 
+import express from 'express';
+import Stripe from 'stripe';
+
 const router = express.Router();
+const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
 router.post('/', async (req, res) => {
   try {
@@ -30,4 +32,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

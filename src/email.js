@@ -1,7 +1,7 @@
 // email.js
-const express = require("express");
-const { Resend } = require("resend");
-const emailTemplate = require("../Templates/email-template.js"); // Ensure this is a CommonJS module
+import express from "express";
+import { Resend } from "resend";
+import emailTemplate from "../Templates/email-template.js";
 
 const router = express.Router();
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
   try {
     const data = await resend.emails.send({
       from: "Portfolio <noreply@cbk-portfolio.com>",
-      to: "killian.boularand@icloud.com", // Replace with your support email
+      to: "killian.boularand@icloud.com",
       subject: "New Contact Form Submission",
       html: emailTemplate(name, email, message),
     });
@@ -23,4 +23,4 @@ router.post("/", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

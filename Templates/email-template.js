@@ -8,4 +8,4 @@ const emailTemplate = (name, email, message) => `
   </div>
 `;
 
-module.exports = emailTemplate; // Use CommonJS export
+export default emailTemplate;
