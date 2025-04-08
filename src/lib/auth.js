@@ -8,10 +8,12 @@ const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
-  trustedOrigins: [process.env.FRONTEND_URL],
+  trustedOrigins: [process.env.FRONTEND_URL, 'http://localhost:5173'],
   emailAndPassword: {
-    enabled: true,
+    enabled: true
   },
+  secret: process.env.BETTER_AUTH_SECRET,
+  baseUrl: process.env.BETTER_AUTH_URL || 'https://backend-au-fil-du-temps.vercel.app'
 });
 
 export { auth };

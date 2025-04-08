@@ -10,24 +10,33 @@ import { auth } from './lib/auth.js';
 
 const app = express();
 const prisma = new PrismaClient()
-const port = 3000;
+const port = process.env.PORT || 3000;
 
+// Update CORS configuration to handle Vercel deployment
 app.use(cors({
-  origin:  process.env.FRONTEND_URL, // Replace with your frontend's origin
-  methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
-  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  origin: [process.env.FRONTEND_URL, 'http://localhost:5173'],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+  exposedHeaders: ['*', 'Authorization']
 }));
+
+// Move express.json middleware before auth routes
+app.use(express.json());
 
 app.all("/api/auth/*", toNodeHandler(auth));
 
 app.get("/api/me", async (req, res) => {
-  const session = await auth.api.getSession({
-     headers: fromNodeHeaders(req.headers),
-   });
- return res.json(session);
+  try {
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(req.headers),
+    });
+    return res.json(session || null);
+  } catch (error) {
+    console.error('Session error:', error);
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 });
-
-app.use(express.json());
 
 app.use("/users", usersRouter);
 app.use("/sendEmail", emailsRouter);
