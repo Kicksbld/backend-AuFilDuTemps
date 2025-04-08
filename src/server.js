@@ -22,7 +22,7 @@ app.use(cors({
 }));
 
 // Move express.json middleware before auth routes
-app.use(express.json());
+
 
 app.all("/api/auth/*", toNodeHandler(auth));
 
@@ -37,6 +37,8 @@ app.get("/api/me", async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 });
+
+app.use(express.json());
 
 app.use("/users", usersRouter);
 app.use("/sendEmail", emailsRouter);
