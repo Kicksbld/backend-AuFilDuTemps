@@ -4,6 +4,7 @@ import cors from "cors";
 import usersRouter from "./users.js";
 import emailsRouter from "./email.js";
 import paymentRouter from './payement.js';
+import productsRouter from './product.js';
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { PrismaClient } from "@prisma/client";
 import { auth } from './lib/auth.js';
@@ -43,6 +44,7 @@ app.use(express.json());
 app.use("/users", usersRouter);
 app.use("/sendEmail", emailsRouter);
 app.use("/payement", paymentRouter);
+app.use("/products", productsRouter);
 
 app.get("/", (req, res) => res.send("Express API running with Prisma on Vercel"));
 
