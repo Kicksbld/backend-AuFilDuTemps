@@ -72,3 +72,39 @@ model Verification {
 
   @@map("verification")
 }
+
+
+model Product {
+  id            Int      @id @default(autoincrement())
+  name          String
+  price         Float
+  sizes         Size[]
+  description   String    
+  color         Color
+  images        String[]
+  numberOfLikes Int      @default(0)
+  stock         Int
+  createdAt     DateTime @default(now())
+}
+
+enum Size {
+  XS
+  S
+  M
+  L
+  XL
+}
+
+enum Color {
+  RED
+  BLUE
+  GREEN
+  BLACK
+  WHITE
+  GREY
+  YELLOW
+  PURPLE
+  PINK
+  ORANGE
+  BROWN
+}
