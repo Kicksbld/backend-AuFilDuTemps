@@ -19,10 +19,18 @@ model User {
   email         String
   emailVerified Boolean
   image         String?
+  phoneNumber   Int?
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  favorites     Favorite[]
+  rewards       Reward[]
+  orders        Order[]
+  addresses     Address[]
+  gender        Gender?
+  preferredSize Size?
+  favoriteColor Color?
 
   @@unique([email])
   @@map("user")
@@ -73,7 +81,6 @@ model Verification {
   @@map("verification")
 }
 
-
 model Product {
   id            Int      @id @default(autoincrement())
   name          String
@@ -84,7 +91,10 @@ model Product {
   images        String[]
   numberOfLikes Int      @default(0)
   stock         Int
+  stripeId      String?  // Stripe product ID
   createdAt     DateTime @default(now())
+  favorites     Favorite[]
+  orderItems    OrderItem[]
 }
 
 enum Size {
@@ -107,4 +117,83 @@ enum Color {
   PINK
   ORANGE
   BROWN
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  productId Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("favorite")
+}
+
+model Reward {
+  id          Int      @id @default(autoincrement())
+  name        String
+  imageUrl    String
+  userId      String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reward")
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  userId      String
+  status      OrderStatus @default(PENDING)
+  totalAmount Float
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       OrderItem[]
+
+  @@map("order")
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float
+  size      Size
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("order_item")
+}
+
+enum Gender {
+  MASCULINE
+  FEMININE
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Address {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  street      String
+  city        String
+  state       String
+  postalCode  String
+  country     String
+  isDefault   Boolean  @default(false)
+  label       String?  // e.g., "Home", "Work", etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("address")
 }

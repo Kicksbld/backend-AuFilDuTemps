@@ -38,10 +38,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, description, price, sizes, color, images, numberOfLikes, stock } = req.body;
+    const { name, description, price, sizes, color, images, numberOfLikes, stock, stripeId } = req.body;
 
-    if (!name || !price || !color || !stock || !price, !sizes ) {
-      return res.status(400).json({ error: "Name and price are required" });
+    if (!name || !price || !color || !stock || !sizes || !stripeId ) {
+      return res.status(400).json({ error: "Name, price, color, stock, sizes, and stripeId are required" });
     }
 
     const product = await prisma.product.create({
@@ -53,7 +53,8 @@ router.post('/', async (req, res) => {
         color,
         images,
         numberOfLikes,
-        stock
+        stock,
+        stripeId
       }
     });
     
