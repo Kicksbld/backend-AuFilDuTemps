@@ -7,19 +7,24 @@ const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
 router.post('/', async (req, res) => {
   try {
-    const { priceId } = req.body; 
+    const { items } = req.body; 
 
-    if (!priceId) {
-      return res.status(400).json({ error: 'Price ID is required' });
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'Items array is required and must not be empty' });
+    }
+
+    // Validate each item has required fields
+    for (const item of items) {
+      if (!item.priceId || !item.quantity) {
+        return res.status(400).json({ error: 'Each item must have priceId and quantity' });
+      }
     }
 
     const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price: priceId, 
-          quantity: 1,
-        },
-      ],
+      line_items: items.map(item => ({
+        price: item.priceId,
+        quantity: item.quantity,
+      })),
       mode: 'payment',
       success_url: `${req.headers.origin}/order-review`, 
       cancel_url: `${req.headers.origin}`, 

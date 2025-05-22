@@ -21,7 +21,7 @@ const port = process.env.PORT || 3000;
 // Update CORS configuration to handle Vercel deployment
 app.use(cors({
   origin: [process.env.FRONTEND_URL, 'http://localhost:5173'],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
   exposedHeaders: ['*', 'Authorization']

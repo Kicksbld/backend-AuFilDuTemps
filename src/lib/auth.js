@@ -15,7 +15,16 @@ const auth = betterAuth({
     enabled: true
   },
   secret: process.env.BETTER_AUTH_SECRET,
-  baseUrl: process.env.BETTER_AUTH_URL || 'https://backend-au-fil-du-temps.vercel.app'
+  baseUrl: process.env.BETTER_AUTH_URL || 'https://backend-au-fil-du-temps.vercel.app',
+  advanced: {
+    defaultCookieAttributes:
+      process.env.NODE_ENV === 'production'
+        ? {
+          sameSite: 'none',
+          secure: true
+        }
+        : undefined
+  },
 });
 
 export { auth };

@@ -141,6 +141,18 @@ router.delete('/:addressId', async (req, res) => {
 
     const { addressId } = req.params;
 
+    // First check if the address exists
+    const address = await prisma.address.findUnique({
+      where: {
+        id: parseInt(addressId),
+        userId: session.user.id
+      }
+    });
+
+    if (!address) {
+      return res.status(404).json({ error: 'Address not found' });
+    }
+
     await prisma.address.delete({
       where: {
         id: parseInt(addressId),
