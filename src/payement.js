@@ -28,6 +28,7 @@ router.post('/', async (req, res) => {
       mode: 'payment',
       success_url: `${req.headers.origin}/order-review`, 
       cancel_url: `${req.headers.origin}`, 
+      allow_promotion_codes: true,
     });
 
     res.status(200).json({ url: session.url });
